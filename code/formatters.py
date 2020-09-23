@@ -235,6 +235,207 @@ def FL_formatter(state_raw, metric='cases'):
     return(df)
 
 
+
+#----------------------------------------------------------------------------
+def NY_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+    df = df.astype(np.int32, errors='ignore')
+    return(df)
+
+def WY_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+    df = df.astype(np.int32, errors='ignore')
+    return(df)
+
+def WV_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time'])
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+    
+    return df
+
+def WA_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time', 'Total Cases'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+    
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    
+    #df = df[df['# Cases Age [0-19]'].notna()]
+    
+    #buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    #df.columns = buckets.tolist()
+    
+    df = df.iloc[:, : 6]
+    
+    df = df.astype(np.int32, errors='ignore')
+    
+    df = df.dropna(subset=['% Cases Age [0-19]','% Cases Age [20-39]', '% Cases Age [40-59]',
+                          '% Cases Age [60-79]', '% Cases Age [80+]', 'Total Cases'], how='all') 
+    return df
+
+def VA_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+    
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+    
+    df = df.iloc[:, :-1]
+    
+    df = df.astype(np.int32, errors='ignore')
+
+    return df
+
+def TN_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+    
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+    
+    df = df.iloc[:, :-1]
+    
+    df = df.astype(np.int32, errors='ignore')
+
+    return df
+
+def SD_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+    df = df.astype(np.int32, errors='ignore')
+    return(df)
+
+def RI_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+    
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+        
+    df=df.drop(['# Cases Age [Pending further information]','Report Time: Age Cases'], axis=1)
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+        
+    df = df.astype(np.int32, errors='ignore')
+    
+    df = df.reindex(sorted(df.columns), axis=1)
+    df = df.dropna(axis='columns',how='all')
+    
+    df['100-110'] = df['100-100']
+    df = df.drop(['0-19','90-100', '100-100'], axis=1)
+    df = df.apply(pd.to_numeric,errors='coerce').fillna(0)
+    
+    return df
+
+
+def PA_formatter(state_raw, metric='cases'):
+    state_raw = pd.DataFrame(state_raw)
+    df = state_raw.sort_values('Scrape Time').reset_index(drop=True)
+    df = df[['Scrape Time'] + df.columns[df.columns.str.contains('Age')].tolist()]
+    df['date'] = pd.to_datetime(df['Scrape Time']).dt.date
+    df = df.loc[~pd.isnull(df.date),:].drop(columns=['Scrape Time'])
+    
+    if metric=='cases':
+        df = df[['date'] + df.columns[df.columns.str.contains('Cases')].tolist()]
+    elif metric=='deaths':
+        df = df[['date'] + df.columns[df.columns.str.contains('Deaths')].tolist()]
+
+    df = df.set_index('date')
+    df = df.drop_duplicates(keep='last')
+    
+    buckets = pd.Series(pd.Series(df.columns).apply(get_age_bucket).unique())
+    df.columns = buckets.tolist()
+        
+    df = df.astype(np.int32, errors='ignore')
+
+    #df['10-19'] = df['10-19'].fillna(df['13-18'])
+
+    return df
+
+
 state_functions = {
     'AL': {
         'formatter': AL_formatter,
@@ -247,7 +448,25 @@ state_functions = {
     'MD': {'formatter': MD_formatter},
     #'MI': {'formatter': MI_formatter}, #bad data
     'MN': {'formatter': MN_formatter},
+    'NY': {'formatter': NY_formatter},
     'OR': {'formatter': OR_formatter},
+    'PA': {'formatter': PA_formatter}, #bad data
+    'RI': {'formatter': RI_formatter},
+    'SD': {
+        'formatter': SD_formatter,
+        'cases_notes': 'Data are missing for [0-9] and [10-19] age range. Data missing for all in last few days as well.'
+    },
+    'TN': {
+        'formatter': TN_formatter,
+        'cases_notes': 'Most recent data from April'
+    },
+    'VA': {
+        'formatter': VA_formatter,
+        'cases_notes': 'Recent data is missing'
+    },
+    #'WA': {'formatter': WY_formatter}, #bad data
+    #'WV': {'formatter': WV_formatter}, #no age data
+    'WY': {'formatter': WY_formatter},
 }
 
 
